@@ -58,11 +58,10 @@ export class Piece {
   private _createDomElement () : HTMLDivElement {
     const element = document.createElement('div');
     element.classList.add('pieceContainer');
+    element.style.backgroundImage = `url('${PieceImage[`${this.color}-${this.kind}`]}')`;
+    element.style.backgroundRepeat = 'no-repeat';
+    element.style.backgroundPosition = 'center';
 
-    const image = document.createElement('img');
-    image.src = PieceImage[`${this.color}-${this.kind}`];
-
-    element.appendChild(image);
     return element;
   }
 }

@@ -345,7 +345,6 @@ export function getValidSquaresForPiece (piece: Piece) {
 
 function addPiece (piece: Piece) {
   piece.domElement!.draggable = true;
-  piece.domElement!.querySelector('img')!.style.pointerEvents = 'none';
   piece.domElement!.addEventListener('dragstart', () => {
     draggedPiece = piece;
   })
