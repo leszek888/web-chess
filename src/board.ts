@@ -261,6 +261,15 @@ export function getValidSquaresForPiece (piece: Piece) {
       validSquares = validSquares.concat(getFreeHorizontalSquares(piece.position) as string[]);
       validSquares = validSquares.concat(getFreeDiagonalSquares(piece.position) as string[]);
       break;
+
+    case PieceKind.Bishop:
+      validSquares = validSquares.concat(getFreeDiagonalSquares(piece.position) as string[]);
+      break;
+
+    case PieceKind.Rook:
+      validSquares = validSquares.concat(getFreeVerticalSquares(piece.position) as string[]);
+      validSquares = validSquares.concat(getFreeHorizontalSquares(piece.position) as string[]);
+      break;
   }
 
   return validSquares;
@@ -289,8 +298,17 @@ export function createBoard () {
 
   const queen = new Piece({ kind: PieceKind.Queen, color: PieceColor.Dark });
   const king = new Piece({ kind: PieceKind.King, color: PieceColor.Dark });
-  queen.setPosition('A8');
-  king.setPosition('C5');
+  const bishop1 = new Piece({ kind: PieceKind.Bishop, color: PieceColor.Dark });
+  const bishop2 = new Piece({ kind: PieceKind.Bishop, color: PieceColor.Dark });
+  const rook1 = new Piece({ kind: PieceKind.Rook, color: PieceColor.Dark });
+  const rook2 = new Piece({ kind: PieceKind.Rook, color: PieceColor.Dark });
+
+  queen.setPosition('H5');
+  king.setPosition('H4');
+  bishop1.setPosition('H3');
+  bishop2.setPosition('H6');
+  rook1.setPosition('H1');
+  rook2.setPosition('H8');
 
   for (let rows = 0; rows !== 8; rows++) {
     for (let cols = 0; cols !== 8; cols++) {
@@ -305,5 +323,9 @@ export function createBoard () {
 
   addPiece(queen);
   addPiece(king);
+  addPiece(bishop1);
+  addPiece(bishop2);
+  addPiece(rook1);
+  addPiece(rook2);
   return boardContainer;
 }
