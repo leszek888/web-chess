@@ -11,7 +11,7 @@ const ROWS_MAP = {
   'H': 7
 }
 
-export const boardState = new Array(8).fill(0).map(x => Array(8).fill(null));
+export const boardState = new Array(8).fill(0).map(() => Array(8).fill(null));
 let draggedPiece: Piece | null = null;
 let boardContainer : HTMLDivElement | null = null;
 
