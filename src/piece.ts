@@ -13,8 +13,8 @@ export enum PieceColor {
 }
 
 export class Piece {
-  private kind: PieceKind;
-  private color: PieceColor;
+  public kind: PieceKind;
+  public color: PieceColor;
 
   public position: string | null = null;
   public domElement: HTMLDivElement | null = null;
