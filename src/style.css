@@ -16,8 +16,9 @@
 .boardContainer {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  grid-gap: 2px;
+  grid-gap: 0.5%;
   background-color: #000;
+  position: relative;
 
   width: 600px;
   height: 600px;
@@ -35,8 +36,8 @@
 
 .pieceContainer {
   position: absolute;
-  width: 12.5%;
-  height: 12.5%;
+  width: 12.0625%;
+  height: 12.0625%;
 
   border: solid 1px red;
   display: flex;
