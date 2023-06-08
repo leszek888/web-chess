@@ -36,7 +36,6 @@ export class Piece {
       return;
     }
 
-    console.log('XXX setting position to:', row, column);
     this.position = position
   }
 

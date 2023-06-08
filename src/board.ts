@@ -11,9 +11,8 @@ const ROWS_MAP = {
   'H': 7
 }
 
+export const boardState = new Array(8).fill(0).map(x => Array(8).fill(null));
 let draggedPiece: Piece | null = null;
-
-const boardState = new Array(8).fill(0).map(x => Array(8).fill(null));
 let boardContainer : HTMLDivElement | null = null;
 
 export type Coords = [
@@ -43,7 +42,6 @@ function movePiece (piece: Piece, position: string) {
 
   const [ row, column ] = coords;
   boardState[row][column] = piece;
-  console.log('XXX boardState', boardState[row][column])
 
   piece.setPosition(position);
   updatePiecePositionOnBoard(piece);
@@ -84,7 +82,6 @@ export function updatePiecePositionOnBoard (piece: Piece) {
   if (isNaN(row) || isNaN(column)) return;
 
   boardState[row][column] = piece;
-  console.log('XXX boardState', row, column)
 
   piece.domElement.style.top = (row * 12.5625) + '%';
   piece.domElement.style.left = (column * 12.5625) + '%';
@@ -121,8 +118,11 @@ function convertNumericCoordsToPosition ([ row, col ]
   return `${Object.keys(ROWS_MAP)[row]}${col+1}`;
 }
 
-export function getFreeVerticalSquares ([ row, column ]
-  : Coords) {
+export function getFreeVerticalSquares (position: string) {
+  const coords = convertPositionToNumericCoords(position);
+  if (!coords) return [];
+  const [ row, column ] = coords;
+
   let x = row;
   let validVerticalSquares = [];
 
@@ -148,14 +148,15 @@ export function getFreeVerticalSquares ([ row, column ]
       validVerticalSquares.push(position)
     }
   }
-  console.log(validVerticalSquares)
 
   return validVerticalSquares;
 }
 
-export function getFreeHorizontalSquares ([ row, column ]
-  : Coords) {
-  console.log(`Horizontal check for ${row}-${column}`)
+export function getFreeHorizontalSquares (position: string) {
+  const coords = convertPositionToNumericCoords(position);
+  if (!coords) return [];
+  const [ row, column ] = coords;
+
   let y = column;
   let validVerticalSquares = [];
 
@@ -181,12 +182,14 @@ export function getFreeHorizontalSquares ([ row, column ]
       validVerticalSquares.push(position)
     }
   }
-  console.log(validVerticalSquares)
-
   return validVerticalSquares;
 }
 
-export function getFreeDiagonalSquares ([ row, column ] : Coords) {
+export function getFreeDiagonalSquares (position: string) {
+  const coords = convertPositionToNumericCoords(position);
+  if (!coords) return [];
+  const [ row, column ] = coords;
+
   let y = column;
   let x = row;
   const validSquares = [];
@@ -250,16 +253,13 @@ export function getFreeDiagonalSquares ([ row, column ] : Coords) {
 export function getValidSquaresForPiece (piece: Piece) {
   if (!piece.position) return [];
 
-  const coords = convertPositionToNumericCoords(piece.position);
-  if (!coords) return [];
-
   let validSquares: string[] = [];
 
   switch (piece.kind) {
     case PieceKind.Queen:
-      validSquares = validSquares.concat(getFreeVerticalSquares(coords) as string[]);
-      validSquares = validSquares.concat(getFreeHorizontalSquares(coords) as string[]);
-      validSquares = validSquares.concat(getFreeDiagonalSquares(coords) as string[]);
+      validSquares = validSquares.concat(getFreeVerticalSquares(piece.position) as string[]);
+      validSquares = validSquares.concat(getFreeHorizontalSquares(piece.position) as string[]);
+      validSquares = validSquares.concat(getFreeDiagonalSquares(piece.position) as string[]);
       break;
   }
 
