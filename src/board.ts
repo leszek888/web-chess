@@ -50,19 +50,11 @@ function createField ({ isDark, position }
   : { isDark: boolean, position: string }) {
   const field = document.createElement('div');
   field.classList.add('boardField');
-  field.addEventListener('dragover', (event) => event?.preventDefault());
-  field.addEventListener('dragenter', (event) => {
-    event?.preventDefault()
+  field.addEventListener('mouseenter', (event) => {
     field.style.filter = 'brightness(0.5)';
   });
-  field.addEventListener('dragleave', () => {
+  field.addEventListener('mouseleave', () => {
     field.style.filter = 'brightness(1)';
-  })
-  field.addEventListener('drop', () => {
-    field.style.filter = 'brightness(1)';
-    if (draggedPiece) {
-      movePiece(draggedPiece, position);
-    }
   })
 
   if (isDark) field.classList.add('dark');
@@ -342,11 +334,26 @@ export function getValidSquaresForPiece (piece: Piece) {
   return validSquares;
 }
 
+function getHoveredField (mouseX: number, mouseY: number) {
+  const boardRect = boardContainer!.getBoundingClientRect();
+
+  const relativeX = mouseX - boardRect.left;
+  const relativeY = mouseY - boardRect.top;
+
+  const col = Math.floor(((relativeX / boardRect.width) * 100)/(12.5));
+  const row = Math.floor(((relativeY / boardRect.height) * 100)/(12.5));
+
+  const coords = convertNumericCoordsToPosition([ row, col ])
+
+  return coords;
+}
+
 window.addEventListener('mousemove', (e) => {
   if (draggedPiece && draggedPiece.domElement) {
     const draggedElement = draggedPiece.domElement;
 
     const rect = draggedElement.getBoundingClientRect();
+
     draggedElement.style.top =
       (e.clientY - Math.floor(rect.height/2)) + 'px';
 
@@ -360,16 +367,7 @@ window.addEventListener('mouseup', (e) => {
 
   const mouseX = e.clientX;
   const mouseY = e.clientY;
-
-  const boardRect = boardContainer!.getBoundingClientRect();
-
-  const relativeX = mouseX - boardRect.left;
-  const relativeY = mouseY - boardRect.top;
-
-  const col = Math.floor(((relativeX / boardRect.width) * 100)/(12.5));
-  const row = Math.floor(((relativeY / boardRect.height) * 100)/(12.5));
-
-  const coords = convertNumericCoordsToPosition([ row, col ])
+  const coords = getHoveredField(mouseX, mouseY);
 
   if (coords) {
     movePiece(draggedPiece, coords);
