@@ -250,6 +250,66 @@ export function getFreeDiagonalSquares (position: string) {
   return validSquares;
 }
 
+export function getFreeSquaresForKing (position: string) {
+  const coords = convertPositionToNumericCoords(position);
+  if (!coords) return [];
+
+  const [ row, column ] = coords;
+
+  const validSquares: string[] = [];
+
+  const addSquare = (x: number, y: number) => {
+    const position = convertNumericCoordsToPosition([ x, y ]);
+    if (position) {
+      validSquares.push(position);
+    }
+  }
+
+  let x = row;
+  let y = column;
+
+  if (!boardState[x-1]?.[y]) addSquare(x-1, y)
+  if (!boardState[x-1]?.[y-1]) addSquare(x-1, y-1)
+  if (!boardState[x-1]?.[y+1]) addSquare(x-1, y+1)
+  if (!boardState[x][y-1]) addSquare(x, y-1)
+  if (!boardState[x][y+1]) addSquare(x, y+1)
+  if (!boardState[x+1]?.[y]) addSquare(x+1, y)
+  if (!boardState[x+1]?.[y-1]) addSquare(x+1, y-1)
+  if (!boardState[x+1]?.[y+1]) addSquare(x+1, y+1)
+
+  return validSquares;
+}
+
+export function getFreeSquaresForKnight (position: string) {
+  const coords = convertPositionToNumericCoords(position);
+  if (!coords) return [];
+
+  const [ row, column ] = coords;
+
+  const validSquares: string[] = [];
+
+  const addSquare = (x: number, y: number) => {
+    const position = convertNumericCoordsToPosition([ x, y ]);
+    if (position) {
+      validSquares.push(position);
+    }
+  }
+
+  let x = row;
+  let y = column;
+
+  if (!boardState[x+2]?.[y-1]) addSquare(x+2, y-1);
+  if (!boardState[x+2]?.[y+1]) addSquare(x+2, y+1);
+  if (!boardState[x-2]?.[y-1]) addSquare(x-2, y-1);
+  if (!boardState[x-2]?.[y+1]) addSquare(x-2, y+1);
+  if (!boardState[x-1]?.[y+2]) addSquare(x-1, y+2);
+  if (!boardState[x+1]?.[y+2]) addSquare(x+1, y+2);
+  if (!boardState[x+1]?.[y-2]) addSquare(x+1, y-2);
+  if (!boardState[x-1]?.[y-2]) addSquare(x-1, y-2);
+
+  return validSquares;
+}
+
 export function getValidSquaresForPiece (piece: Piece) {
   if (!piece.position) return [];
 
@@ -269,6 +329,14 @@ export function getValidSquaresForPiece (piece: Piece) {
     case PieceKind.Rook:
       validSquares = validSquares.concat(getFreeVerticalSquares(piece.position) as string[]);
       validSquares = validSquares.concat(getFreeHorizontalSquares(piece.position) as string[]);
+      break;
+
+    case PieceKind.King:
+      validSquares = getFreeSquaresForKing(piece.position);
+      break;
+
+    case PieceKind.Knight:
+      validSquares = getFreeSquaresForKnight(piece.position);
       break;
   }
 
@@ -302,6 +370,8 @@ export function createBoard () {
   const bishop2 = new Piece({ kind: PieceKind.Bishop, color: PieceColor.Dark });
   const rook1 = new Piece({ kind: PieceKind.Rook, color: PieceColor.Dark });
   const rook2 = new Piece({ kind: PieceKind.Rook, color: PieceColor.Dark });
+  const knight1 = new Piece({ kind: PieceKind.Knight, color: PieceColor.Dark });
+  const knight2 = new Piece({ kind: PieceKind.Knight, color: PieceColor.Dark });
 
   queen.setPosition('H5');
   king.setPosition('H4');
@@ -309,6 +379,8 @@ export function createBoard () {
   bishop2.setPosition('H6');
   rook1.setPosition('H1');
   rook2.setPosition('H8');
+  knight1.setPosition('H2');
+  knight2.setPosition('H7');
 
   for (let rows = 0; rows !== 8; rows++) {
     for (let cols = 0; cols !== 8; cols++) {
@@ -327,5 +399,7 @@ export function createBoard () {
   addPiece(bishop2);
   addPiece(rook1);
   addPiece(rook2);
+  addPiece(knight1);
+  addPiece(knight2);
   return boardContainer;
 }
