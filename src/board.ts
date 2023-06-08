@@ -11,9 +11,27 @@ const COLUMNS_MAP = {
   'H': 7
 }
 
-function createField ({ isDark } : { isDark: boolean }) {
+let draggedPiece: Piece | null = null;
+
+function createField ({ isDark, position }
+  : { isDark: boolean, position: string }) {
   const field = document.createElement('div');
   field.classList.add('boardField');
+  field.addEventListener('dragover', (event) => event?.preventDefault());
+  field.addEventListener('dragenter', (event) => {
+    event?.preventDefault()
+    field.style.filter = 'brightness(0.5)';
+  });
+  field.addEventListener('dragleave', () => {
+    field.style.filter = 'brightness(1)';
+  })
+  field.addEventListener('drop', () => {
+    field.style.filter = 'brightness(1)';
+    if (draggedPiece) {
+      draggedPiece.setPosition(position);
+      setPiecePositionOnBoard(draggedPiece);
+    }
+  })
 
   if (isDark) field.classList.add('dark');
 
@@ -42,13 +60,25 @@ export function createBoard () {
   const queen = new Piece({ kind: PieceKind.Queen, color: PieceColor.Dark });
   queen.setPosition('A8');
 
+  queen.domElement!.draggable = true;
+  queen.domElement!.querySelector('img')!.style.pointerEvents = 'none';
+  queen.domElement!.addEventListener('dragstart', () => {
+    draggedPiece = queen;
+  })
+
+  queen.domElement!.addEventListener('dragend', () => {
+    draggedPiece = null;
+  })
+
   const boardContainer = document.createElement('div');
   boardContainer.classList.add('boardContainer');
 
   for (let rows = 0; rows !== 8; rows++) {
     for (let cols = 0; cols !== 8; cols++) {
       const isDark = Boolean((rows + cols) % 2);
-      const field = createField({ isDark })
+      const col = Object.keys(COLUMNS_MAP)[rows];
+      const row = cols + 1;
+      const field = createField({ isDark, position: `${col}${row}` })
 
       boardContainer.appendChild(field);
     }

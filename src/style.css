@@ -39,7 +39,6 @@
   width: 12.0625%;
   height: 12.0625%;
 
-  border: solid 1px red;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,6 +46,6 @@
 }
 
 .pieceContainer:hover {
-  background-color: #aca;
+  background-color: #acaa;
   cursor: pointer;
 }
