@@ -1,3 +1,10 @@
+import DarkPawn from './assets/images/pieces/d-pawn.svg'
+import DarkBishop from './assets/images/pieces/d-bishop.svg'
+import DarkKnight from './assets/images/pieces/d-knight.svg'
+import DarkRook from './assets/images/pieces/d-rook.svg'
+import DarkQueen from './assets/images/pieces/d-queen.svg'
+import DarkKing from './assets/images/pieces/d-king.svg'
+
 export enum PieceKind {
   Pawn = 'pawn',
   Bishop = 'bishop',
@@ -10,6 +17,15 @@ export enum PieceKind {
 export enum PieceColor {
   Light = 'l',
   Dark = 'd',
+}
+
+const PieceImage = {
+  [`${PieceColor.Dark}-${PieceKind.Pawn}`]: DarkPawn,
+  [`${PieceColor.Dark}-${PieceKind.Bishop}`]: DarkBishop,
+  [`${PieceColor.Dark}-${PieceKind.Knight}`]: DarkKnight,
+  [`${PieceColor.Dark}-${PieceKind.Rook}`]: DarkRook,
+  [`${PieceColor.Dark}-${PieceKind.Queen}`]: DarkQueen,
+  [`${PieceColor.Dark}-${PieceKind.King}`]: DarkKing,
 }
 
 export class Piece {
@@ -42,11 +58,10 @@ export class Piece {
   private _createDomElement () : HTMLDivElement {
     const element = document.createElement('div');
     element.classList.add('pieceContainer');
+    element.style.backgroundImage = `url('${PieceImage[`${this.color}-${this.kind}`]}')`;
+    element.style.backgroundRepeat = 'no-repeat';
+    element.style.backgroundPosition = 'center';
 
-    const image = document.createElement('img');
-    image.src = `src/assets/images/pieces/${this.color}-${this.kind}.svg`;
-
-    element.appendChild(image);
     return element;
   }
 }
